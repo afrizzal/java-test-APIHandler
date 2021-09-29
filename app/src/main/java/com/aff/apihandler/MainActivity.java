@@ -19,6 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
         initView();
         initListener();
+        getDataHome();
+    }
+
+    private void getDataHome() {
+        getHomeAsyncTask getHomeAsyncTask = new getHomeAsyncTask();
+        getHomeAsyncTask.execute();
     }
 
     private void initListener() {
@@ -75,16 +81,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
-                if (urlConnection != null) {
-                    urlConnection.disconnect()
-                }
+                return "Exception : "+e.getMessage();
             }
         }
 
         @Override
         protected void onPostExecute(String s) {
             progressDialog.dismiss();
+            try {
+                JSONArray jsonArray = new JSONArray(s);
+                JSONObject object = jsonArray.getJSONObject (index: 0);
+                String showData = "Nama Negara : "+object.getString( name: "name");
+
+                tvShow.setText(showData);
+
+            } catch ((JSONEcception e) {
+                e.printStackTrace();
+            }
         }
     }
 }
